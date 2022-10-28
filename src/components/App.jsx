@@ -1,49 +1,70 @@
 import React, { Component } from 'react';
-// import { nanoid } from 'nanoid';
-// model.id = nanoid(10) //=> "V1StGXR8_Z5jdHi6B-myT"
+import ContactForm from './ContactForm';
+import { nanoid } from 'nanoid';
 
 class App extends Component {
   state = {
     contacts: [],
-    name: '',
+    filter: '',
   };
 
-  // onInputChange = event => {
-  //   this.setState({ name: event.currentTarget.value });
-  // };
+  addContacts = (name, number) => {
+    const contact = {
+      id: nanoid(10),
+      name,
+      number,
+    };
 
-  onFormSubmit = event => {
-    event.preventDefault();
-    console.log('submit');
-    const form = event.currentTarget;
-    this.setState({ name: form.elements.name.value });
-    console.log(form.elements.name.value);
-    // this.props.onSubmit(this.state.name);
+    this.setState(({ contacts }) => ({
+      contacts: [contact, ...contacts],
+    }));
 
-    form.reset();
-    this.setState({ name: '' });
+    setTimeout(() => {
+      console.log(this.state.contacts);
+    });
+  };
+
+  changeFilter = event => {
+    this.setState({ filter: event.currentTarget.value });
+  };
+
+  getFiltredContacts = () => {
+    const { filter, contacts } = this.state;
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
   };
 
   render() {
     return (
       <>
-        <form onSubmit={this.onFormSubmit}>
-          <label>
-            Name
-            <input
-              type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-            />
-          </label>
-          <button type="submit">Add contact</button>
-        </form>
+        <h1>Phonebook</h1>
+        <ContactForm onSubmit={this.addContacts} />
+
         <div>
           <h2>Contacts</h2>
+          <ul>
+            {this.getFiltredContacts().map(contact => (
+              <li key={contact.id}>
+                <p>
+                  {contact.name}: <span>{contact.number}</span>
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          <ul></ul>
+        <div>
+          <label>
+            Find contacts by name
+            <input
+              name="name"
+              value={this.state.filter}
+              onChange={this.changeFilter}
+            ></input>
+          </label>
         </div>
       </>
     );
