@@ -10,7 +10,7 @@ class App extends Component {
     filter: '',
   };
 
-  addContacts = (name, number) => {
+  addContact = (name, number) => {
     const contact = {
       id: nanoid(10),
       name,
@@ -24,6 +24,12 @@ class App extends Component {
     setTimeout(() => {
       console.log(this.state.contacts);
     });
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
   };
 
   changeFilter = event => {
@@ -43,12 +49,15 @@ class App extends Component {
     return (
       <>
         <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.addContacts} />
+        <ContactForm onSubmit={this.addContact} />
 
         <h2>Contacts</h2>
         <Filter value={this.state.filter} onChange={this.changeFilter} />
 
-        <ContactList contacts={this.getFiltredContacts()} />
+        <ContactList
+          contacts={this.getFiltredContacts()}
+          onDeleteContact={this.deleteContact}
+        />
       </>
     );
   }
