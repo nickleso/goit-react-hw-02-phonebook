@@ -3,6 +3,7 @@ import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
 import { nanoid } from 'nanoid';
+import css from './App.module.css';
 
 class App extends Component {
   state = {
@@ -11,19 +12,24 @@ class App extends Component {
   };
 
   addContact = (name, number) => {
-    const contact = {
-      id: nanoid(10),
-      name,
-      number,
-    };
+    const normalizedFilter = name.toLowerCase();
+    const checkByName = this.state.contacts.find(
+      contact => contact.name.toLowerCase() === normalizedFilter
+    );
 
-    this.setState(({ contacts }) => ({
-      contacts: [contact, ...contacts],
-    }));
+    if (checkByName) {
+      alert(`${name} is already in contacts.`);
+    } else {
+      const contact = {
+        id: nanoid(10),
+        name,
+        number,
+      };
 
-    setTimeout(() => {
-      console.log(this.state.contacts);
-    });
+      this.setState(({ contacts }) => ({
+        contacts: [contact, ...contacts],
+      }));
+    }
   };
 
   deleteContact = contactId => {
@@ -47,18 +53,22 @@ class App extends Component {
 
   render() {
     return (
-      <>
-        <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.addContact} />
+      <section className={css.phonebook}>
+        <div className={css.phonebook__wrap}>
+          <h1 className={css.phonebook__title}>Phonebook</h1>
+          <ContactForm onSubmit={this.addContact} />
+        </div>
 
-        <h2>Contacts</h2>
-        <Filter value={this.state.filter} onChange={this.changeFilter} />
+        <div className={css.contacts__wrap}>
+          <h2 className={css.phonebook__title}>Contacts</h2>
+          <Filter value={this.state.filter} onChange={this.changeFilter} />
+        </div>
 
         <ContactList
           contacts={this.getFiltredContacts()}
           onDeleteContact={this.deleteContact}
         />
-      </>
+      </section>
     );
   }
 }
