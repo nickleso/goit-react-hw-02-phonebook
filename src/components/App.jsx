@@ -19,17 +19,18 @@ class App extends Component {
 
     if (checkByName) {
       alert(`${name} is already in contacts.`);
-    } else {
-      const contact = {
-        id: nanoid(10),
-        name,
-        number,
-      };
-
-      this.setState(({ contacts }) => ({
-        contacts: [contact, ...contacts],
-      }));
+      return;
     }
+
+    const contact = {
+      id: nanoid(10),
+      name,
+      number,
+    };
+
+    this.setState(({ contacts }) => ({
+      contacts: [contact, ...contacts],
+    }));
   };
 
   deleteContact = contactId => {
