@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import css from './App.module.css';
 
 const INITIAL_STATE = {
@@ -62,5 +63,10 @@ class ContactForm extends Component {
     );
   }
 }
+
+INITIAL_STATE.propTypes = {
+  name: PropTypes.number.isRequired,
+  number: PropTypes.number.isRequired,
+};
 
 export default ContactForm;
